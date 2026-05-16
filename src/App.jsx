@@ -95,23 +95,42 @@ export default function Portfolio() {
 
 const sendChat = async () => {
   if (!input.trim() || loading) return;
+
   const userMsg = { role: "user", content: input };
   const newMsgs = [...messages, userMsg];
+
   setMessages(newMsgs);
   setInput("");
   setLoading(true);
+
   try {
     const res = await fetch("/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ messages: newMsgs }),
     });
+
     const data = await res.json();
-    const reply = data.choices?.[0]?.message?.content || "Error: No response.";
-    setMessages(prev => [...prev, { role: "assistant", content: reply }]);
-  } catch {
-    setMessages(prev => [...prev, { role: "assistant", content: "[ERR] Connection failed. Please retry." }]);
+
+    if (!res.ok) {
+      throw new Error(data.error || "API Error");
+    }
+
+    const reply =
+      data?.choices?.[0]?.message?.content ||
+      "No response from assistant.";
+
+    setMessages((prev) => [
+      ...prev,
+      { role: "assistant", content: reply },
+    ]);
+  } catch (err) {
+    setMessages((prev) => [
+      ...prev,
+      { role: "assistant", content: "Error: " + err.message },
+    ]);
   }
+
   setLoading(false);
 };
 
