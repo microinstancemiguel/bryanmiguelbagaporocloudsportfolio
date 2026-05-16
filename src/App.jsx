@@ -93,32 +93,28 @@ export default function Portfolio() {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const sendChat = async () => {
-    if (!input.trim() || loading) return;
-    const userMsg = { role: "user", content: input };
-    const newMsgs = [...messages, userMsg];
-    setMessages(newMsgs);
-    setInput("");
-    setLoading(true);
-    try {
-      const res = await fetch("https://api.anthropic.com/v1/messages", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: "claude-sonnet-4-20250514",
-          max_tokens: 1000,
-          system: BOT_SYSTEM,
-          messages: newMsgs,
-        }),
-      });
-      const data = await res.json();
-      const reply = data.content?.find(b => b.type === "text")?.text || "Error: No response.";
-      setMessages(prev => [...prev, { role: "assistant", content: reply }]);
-    } catch {
-      setMessages(prev => [...prev, { role: "assistant", content: "[ERR] Connection failed. Please retry." }]);
-    }
-    setLoading(false);
-  };
+const sendChat = async () => {
+  if (!input.trim() || loading) return;
+  const userMsg = { role: "user", content: input };
+  const newMsgs = [...messages, userMsg];
+  setMessages(newMsgs);
+  setInput("");
+  setLoading(true);
+  try {
+    const res = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ messages: newMsgs }),
+    });
+    const data = await res.json();
+    const reply = data.choices?.[0]?.message?.content || "Error: No response.";
+    setMessages(prev => [...prev, { role: "assistant", content: reply }]);
+  } catch {
+    setMessages(prev => [...prev, { role: "assistant", content: "[ERR] Connection failed. Please retry." }]);
+  }
+  setLoading(false);
+};
+
 
   const handleEmail = (e) => {
     e.preventDefault();
@@ -223,7 +219,7 @@ export default function Portfolio() {
                 ))}
               </div>
               <p style={{ fontSize: 13, lineHeight: 1.9, color: muted, maxWidth: 480, marginBottom: 36 }}>
-                Designing and deploying scalable cloud-native applications. Specializing in distributed systems, serverless architectures, and modern JavaScript ecosystems on AWS.
+                BSIT 3rd Year - Network Infrastructure & Data Security  @ Adamson University Manila Under College of Computing and Information Technology // Cl 
               </p>
               <div style={{ display: "flex", gap: 12 }}>
                 <button onClick={() => scrollTo("Contact")} className="btn" style={{ background: cyan, color: "#08090a", border: `1px solid ${cyan}` }}>
@@ -359,7 +355,7 @@ export default function Portfolio() {
                 {[
                   { label: "email", val: "bryanmiguelbagaporoclouds@gmail.com", icon: "✉" },
                   { label: "linkedin", val: "in/bryan-miguel-bagaporo", icon: "in" },
-                  { label: "github", val: "github.com/bryanbagaporo", icon: "⌥" },
+                  { label: "github", val: "github.com/microinstancesmiguel", icon: "⌥" },
                   { label: "location", val: "Manila, PH", icon: "◎" },
                 ].map((row, i, arr) => (
                   <div key={row.label} style={{ display: "flex", alignItems: "center", gap: 16, padding: "13px 18px", background: i % 2 === 0 ? surface : surfaceAlt, borderBottom: i < arr.length - 1 ? `1px solid ${border}` : "none" }}>
