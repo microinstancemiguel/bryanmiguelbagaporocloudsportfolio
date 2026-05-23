@@ -22,6 +22,7 @@ const SKILLS = {
 const CERTS = [
   { title: "Databases", org: "Certiport - A Pearson VUE Business", year: "2025", status: "ACTIVE" },
   { title: "Network Security", org: "Certiport - A Pearson VUE Business", year: "2026", status: "ACTIVE" },
+  { title: "Certified in Cybersecurity (CC)", org: "ISC2", year: "2026", status: "ACTIVE" },
 ];
 
 const NAV = ["About", "Stack", "Certificates", "Contact"];
