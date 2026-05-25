@@ -190,6 +190,21 @@ export default function Portfolio() {
                 <p style={{ color: "#888", marginTop: 3 }}>3rd Year · 2026</p>
               </div>
             </div>
+             <div style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: 8, alignItems: "baseline" }}>
+              <div>
+                <p style={{ fontSize: 16, fontWeight: 500, marginBottom: 3 }}>Adamson University</p>
+                <p style={{ fontSize: 14, color: "#555", fontStyle: "italic", marginBottom: 3 }}>
+                  Bachelor of Science in Information Technology
+                </p>
+                <p style={{ fontSize: 13, color: "#888" }}>
+                  Network Infrastructure &amp; Data Security · College of Computing and Information Technology
+                </p>
+              </div>
+              <div style={{ textAlign: "right", fontSize: 13, color: "#555", whiteSpace: "nowrap" }}>
+                <p>Manila, PH</p>
+                <p style={{ color: "#888", marginTop: 3 }}>3rd Year · 2026</p>
+              </div>
+            </div>
           </div>
 
           {/* Summary */}
