@@ -273,6 +273,29 @@ export default function Portfolio() {
 
         <hr className="rule" />
 
+                {/* CERTIFICATES */}
+        <section id="Certificates" style={{ paddingTop: 56, paddingBottom: 56 }}>
+          <h2 style={{ fontSize: 11, letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 10, fontWeight: 500 }}>
+            Certifications
+          </h2>
+          <hr className="rule" style={{ marginBottom: 0 }} />
+
+          <div style={{ marginTop: 4 }}>
+            {CERTS.map((c) => (
+              <div key={c.title} className="cert-row">
+                <div>
+                  <p style={{ fontSize: 15, fontWeight: 500, marginBottom: 3 }}>{c.title}</p>
+                  <p style={{ fontSize: 13, color: "#888", fontStyle: "italic" }}>{c.org}</p>
+                </div>
+                <div style={{ textAlign: "right", whiteSpace: "nowrap" }}>
+                  <p style={{ fontSize: 13, color: "#555", marginBottom: 3 }}>{c.year}</p>
+                  <p style={{ fontSize: 11, letterSpacing: "0.1em", textTransform: "uppercase", color: "#888" }}>{c.status}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
         {/* STACK */}
         <section id="Stack" style={{ paddingTop: 56, paddingBottom: 56 }}>
           <h2 style={{ fontSize: 11, letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 10, fontWeight: 500 }}>
@@ -295,31 +318,6 @@ export default function Portfolio() {
               </div>
             </div>
           ))}
-        </section>
-
-        <hr className="rule" />
-
-        {/* CERTIFICATES */}
-        <section id="Certificates" style={{ paddingTop: 56, paddingBottom: 56 }}>
-          <h2 style={{ fontSize: 11, letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 10, fontWeight: 500 }}>
-            Certifications
-          </h2>
-          <hr className="rule" style={{ marginBottom: 0 }} />
-
-          <div style={{ marginTop: 4 }}>
-            {CERTS.map((c) => (
-              <div key={c.title} className="cert-row">
-                <div>
-                  <p style={{ fontSize: 15, fontWeight: 500, marginBottom: 3 }}>{c.title}</p>
-                  <p style={{ fontSize: 13, color: "#888", fontStyle: "italic" }}>{c.org}</p>
-                </div>
-                <div style={{ textAlign: "right", whiteSpace: "nowrap" }}>
-                  <p style={{ fontSize: 13, color: "#555", marginBottom: 3 }}>{c.year}</p>
-                  <p style={{ fontSize: 11, letterSpacing: "0.1em", textTransform: "uppercase", color: "#888" }}>{c.status}</p>
-                </div>
-              </div>
-            ))}
-          </div>
         </section>
 
         <hr className="rule" />
