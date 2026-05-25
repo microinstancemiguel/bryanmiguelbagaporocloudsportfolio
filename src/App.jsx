@@ -38,7 +38,7 @@ const CERTS = [
   { title: "Certified in Cybersecurity (CC)", org: "ISC2", year: "2026", status: "Active" },
 ];
 
-const NAV = ["About", "Stack", "Certificates", "Contact"];
+const NAV = ["About", "Certificates", "Stack", "Contact"];
 
 export default function Portfolio() {
   const [active, setActive] = useState("About");
