@@ -18,6 +18,15 @@ const SKILLS = {
   Cloud: [
     { name: "AWS", tag: "Multi-Region" },
   ],
+  Skills:[
+    { name: "Web Development"},
+    { name: "KALI Linux" },
+    { name: "Wireshark" },
+    { name: "Nmap - Zenmap" },
+    { name: "XAMPP" },
+    { name: "ADOBE", tag:"Illustrator"},
+    { name: "Clerical Ability"},
+  ]
 };
 
 const CERTS = [
@@ -176,7 +185,7 @@ export default function Portfolio() {
             {/* Info */}
             <div style={{ flex: 1 }}>
               <h1 style={{ fontSize: 30, fontWeight: 500, letterSpacing: "0.04em", marginBottom: 10, lineHeight: 1.15 }}>
-                Bryan Miguel Bagaporo
+                Bryan Miguel Bagaporo, CC
               </h1>
               <div
                 className="info-titles"
@@ -187,6 +196,8 @@ export default function Portfolio() {
                 <span>BSIT Student</span>
                 <span style={{ color: "#bbb" }}>·</span>
                 <span>Cybersecurity</span>
+                <span style={{ color: "#bbb" }}>·</span>
+                <span>Civil Service Professional</span>
               </div>
               <div
                 className="info-links"
