@@ -319,10 +319,11 @@ export default function Portfolio() {
             </h2>
             <hr className="rule" style={{ marginBottom: 16 }} />
             <p style={{ fontSize: 15, lineHeight: 1.85, color: "#333" }}>
-              Third-year BSIT student at Adamson University specializing in network infrastructure and data security.
+              BSIT student at Adamson University specializing in network infrastructure and data security.
               Pursuing a career in cloud engineering and architecture with hands-on experience across AWS,
-              full-stack web development, and cybersecurity. Certified in cybersecurity and actively building
-              production-grade systems in the Asia Pacific region.
+              full-stack web development, and cybersecurity. Certified in cybersecurity (CC) BY ISC2. 
+
+              VALORANT GOD (Duelist), Counter-Strike (Entry Fragger), League of Legends (Thrower) & Comic Nerd.
             </p>
           </div>
         </section>
