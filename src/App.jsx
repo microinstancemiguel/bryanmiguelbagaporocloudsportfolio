@@ -1,5 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import emailjs from "@emailjs/browser";
 import photo from "./AIGoatman.jpg";
+
+emailjs.init("vNfhSk7yAHwtaMihM");
 
 const SKILLS = {
   Frontend: [
@@ -18,15 +21,15 @@ const SKILLS = {
   Cloud: [
     { name: "AWS", tag: "Multi-Region" },
   ],
-  Skills:[
-    { name: "Web Development"},
+  Skills: [
+    { name: "Web Development" },
     { name: "KALI Linux" },
     { name: "Wireshark" },
     { name: "Nmap - Zenmap" },
     { name: "XAMPP" },
-    { name: "ADOBE", tag:"Illustrator"},
-    { name: "Clerical Ability"},
-  ]
+    { name: "ADOBE", tag: "Illustrator" },
+    { name: "Clerical Ability" },
+  ],
 };
 
 const CERTS = [
@@ -39,6 +42,9 @@ const NAV = ["About", "Stack", "Certificates", "Contact"];
 
 export default function Portfolio() {
   const [active, setActive] = useState("About");
+  const [form, setForm] = useState({ from_name: "", from_email: "", subject: "", message: "" });
+  const [sending, setSending] = useState(false);
+  const [status, setStatus] = useState(null); // { type: "success" | "error", text: string }
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -59,6 +65,30 @@ export default function Portfolio() {
   const scrollTo = (id) => {
     setActive(id);
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const handleChange = (e) => {
+    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    setStatus(null);
+  };
+
+  const handleSubmit = async () => {
+    const { from_name, from_email, message } = form;
+    if (!from_name.trim() || !from_email.trim() || !message.trim()) {
+      setStatus({ type: "error", text: "Please fill in name, email, and message." });
+      return;
+    }
+    setSending(true);
+    setStatus(null);
+    try {
+      await emailjs.send("service_7bd4reo", "template_exv8jjo", form);
+      setStatus({ type: "success", text: "Message sent. I'll get back to you soon." });
+      setForm({ from_name: "", from_email: "", subject: "", message: "" });
+    } catch {
+      setStatus({ type: "error", text: "Something went wrong. Please email me directly." });
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -119,12 +149,45 @@ export default function Portfolio() {
         }
         .contact-link:hover { opacity: 0.5; }
 
+        .form-input {
+          font-family: 'EB Garamond', serif;
+          font-size: 15px;
+          width: 100%;
+          background: transparent;
+          border: none;
+          border-bottom: 1px solid #ccc;
+          padding: 8px 0;
+          color: #1a1a1a;
+          outline: none;
+          transition: border-color 0.2s;
+          border-radius: 0;
+        }
+        .form-input:focus { border-bottom-color: #1a1a1a; }
+        .form-input::placeholder { color: #bbb; }
+        textarea.form-input { resize: none; min-height: 90px; }
+
+        .send-btn {
+          font-family: 'EB Garamond', serif;
+          font-size: 13px;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          background: none;
+          border: 1px solid #1a1a1a;
+          color: #1a1a1a;
+          padding: 10px 28px;
+          cursor: pointer;
+          transition: background 0.2s, color 0.2s;
+        }
+        .send-btn:hover:not(:disabled) { background: #1a1a1a; color: #faf9f7; }
+        .send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
         @media (max-width: 640px) {
           .two-col { grid-template-columns: 1fr !important; }
           .hide-mobile { display: none !important; }
           .about-header { flex-direction: column !important; align-items: center !important; text-align: center !important; }
           .about-header .info-links { justify-content: center !important; }
           .about-header .info-titles { justify-content: center !important; }
+          .form-two-col { grid-template-columns: 1fr !important; }
         }
       `}</style>
 
@@ -155,8 +218,6 @@ export default function Portfolio() {
 
         {/* ABOUT */}
         <section id="About" style={{ paddingTop: 72, paddingBottom: 64 }}>
-
-          {/* Header block — image left, info right */}
           <div
             className="about-header"
             style={{
@@ -168,7 +229,6 @@ export default function Portfolio() {
               borderBottom: "2px solid #1a1a1a",
             }}
           >
-            {/* Photo */}
             <img
               src={photo}
               alt="Bryan Miguel Bagaporo"
@@ -181,8 +241,6 @@ export default function Portfolio() {
                 border: "1px solid #ddd",
               }}
             />
-
-            {/* Info */}
             <div style={{ flex: 1 }}>
               <h1 style={{ fontSize: 30, fontWeight: 500, letterSpacing: "0.04em", marginBottom: 10, lineHeight: 1.15 }}>
                 Bryan Miguel Bagaporo, CC
@@ -245,9 +303,7 @@ export default function Portfolio() {
                 <p style={{ fontSize: 14, color: "#555", fontStyle: "italic", marginBottom: 3 }}>
                   Science, Technology, Engineering &amp; Mathematics
                 </p>
-                <p style={{ fontSize: 13, color: "#888" }}>
-                  STEM Engineering, BED
-                </p>
+                <p style={{ fontSize: 13, color: "#888" }}>STEM Engineering, BED</p>
               </div>
               <div style={{ textAlign: "right", fontSize: 13, color: "#555", whiteSpace: "nowrap" }}>
                 <p>Manila, PH</p>
@@ -273,13 +329,12 @@ export default function Portfolio() {
 
         <hr className="rule" />
 
-                {/* CERTIFICATES */}
+        {/* CERTIFICATES */}
         <section id="Certificates" style={{ paddingTop: 56, paddingBottom: 56 }}>
           <h2 style={{ fontSize: 11, letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 10, fontWeight: 500 }}>
             Certifications
           </h2>
           <hr className="rule" style={{ marginBottom: 0 }} />
-
           <div style={{ marginTop: 4 }}>
             {CERTS.map((c) => (
               <div key={c.title} className="cert-row">
@@ -302,7 +357,6 @@ export default function Portfolio() {
             Technical Stack
           </h2>
           <hr className="rule" style={{ marginBottom: 0 }} />
-
           {Object.entries(SKILLS).map(([cat, skills]) => (
             <div key={cat} style={{ marginTop: 28 }}>
               <p style={{ fontSize: 12, letterSpacing: "0.14em", textTransform: "uppercase", color: "#888", marginBottom: 8 }}>
@@ -329,7 +383,8 @@ export default function Portfolio() {
           </h2>
           <hr className="rule" style={{ marginBottom: 32 }} />
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 0 }} className="two-col">
+          {/* Contact links */}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 0, marginBottom: 40 }} className="two-col">
             {[
               { label: "Email", val: "bryanmiguelbagaporoclouds@gmail.com", href: "mailto:bryanmiguelbagaporoclouds@gmail.com" },
               { label: "LinkedIn", val: "in/bryan-miguel-bagaporo", href: "https://linkedin.com/in/bryan-miguel-bagaporo" },
@@ -354,8 +409,85 @@ export default function Portfolio() {
               </div>
             ))}
           </div>
-        </section>
 
+          {/* Contact Form */}
+          <div>
+            <p style={{ fontSize: 11, letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 24, color: "#888" }}>
+              Send a Message
+            </p>
+
+            <div className="form-two-col" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 32px", marginBottom: 22 }}>
+              <div>
+                <label style={{ fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: "#888", display: "block", marginBottom: 7 }}>
+                  Name
+                </label>
+                <input
+                  className="form-input"
+                  name="from_name"
+                  type="text"
+                  placeholder="Your name"
+                  value={form.from_name}
+                  onChange={handleChange}
+                />
+              </div>
+              <div>
+                <label style={{ fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: "#888", display: "block", marginBottom: 7 }}>
+                  Email
+                </label>
+                <input
+                  className="form-input"
+                  name="from_email"
+                  type="email"
+                  placeholder="your@email.com"
+                  value={form.from_email}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+
+            <div style={{ marginBottom: 22 }}>
+              <label style={{ fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: "#888", display: "block", marginBottom: 7 }}>
+                Subject
+              </label>
+              <input
+                className="form-input"
+                name="subject"
+                type="text"
+                placeholder="What's this about?"
+                value={form.subject}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div style={{ marginBottom: 28 }}>
+              <label style={{ fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: "#888", display: "block", marginBottom: 7 }}>
+                Message
+              </label>
+              <textarea
+                className="form-input"
+                name="message"
+                placeholder="Your message..."
+                value={form.message}
+                onChange={handleChange}
+              />
+            </div>
+
+            <button className="send-btn" onClick={handleSubmit} disabled={sending}>
+              {sending ? "Sending..." : "Send Message"}
+            </button>
+
+            {status && (
+              <p style={{
+                fontSize: 13,
+                marginTop: 14,
+                fontStyle: "italic",
+                color: status.type === "success" ? "#2d6a4f" : "#9b2226",
+              }}>
+                {status.text}
+              </p>
+            )}
+          </div>
+        </section>
       </main>
 
       {/* FOOTER */}
