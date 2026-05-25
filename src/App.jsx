@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import emailjs from "@emailjs/browser";
 import photo from "./AIGoatman.jpg";
-
+import ccitLogo from "./CCIT.jpg";
 emailjs.init("vNfhSk7yAHwtaMihM");
 
 const SKILLS = {
