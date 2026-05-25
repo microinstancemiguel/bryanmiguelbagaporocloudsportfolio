@@ -187,7 +187,7 @@ export default function Portfolio() {
               </div>
               <div style={{ textAlign: "right", fontSize: 13, color: "#555", whiteSpace: "nowrap" }}>
                 <p>Manila, PH</p>
-                <p style={{ color: "#888", marginTop: 3 }}>Grade 11-12 · 2020-2022</p>
+                <p style={{ color: "#888", marginTop: 3 }}>1st Year - 4th Year ·2022-2027 </p>
               </div>
             </div>
              <div style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: 8, alignItems: "baseline" }}>
@@ -202,7 +202,7 @@ export default function Portfolio() {
               </div>
               <div style={{ textAlign: "right", fontSize: 13, color: "#555", whiteSpace: "nowrap" }}>
                 <p>Manila, PH</p>
-                <p style={{ color: "#888", marginTop: 3 }}>3rd Year · 2026</p>
+                <p style={{ color: "#888", marginTop: 3 }}>Grade 11-12 · 2020-2022</p>
               </div>
             </div>
           </div>
