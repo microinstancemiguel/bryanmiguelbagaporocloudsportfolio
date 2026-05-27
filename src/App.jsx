@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import emailjs from "@emailjs/browser";
 import photo from "./AIGoatman.jpg";
+import icon48 from "./icon48.png"; // your extension icon
 import rAItify1 from "./rAI1.png";
 import rAItify2 from "./rAI2.png";
 import rAItify3 from "./rAI3.png";
@@ -43,20 +44,23 @@ const CERTS = [
 const PROJECTS = [
   {
     title: "rAItify v1",
-    desc: "A Browser Extension that Detects A.I Contents",
+    desc: "A Browser Extension that Detects A.I Contents. Powered by GROQ LLama Scout",
     tech: "JS Vanilla · Chrome Extension (Manifest V3) · Groq API Llama4 Scout · Node.js · Git + GitHub · MutationObserver · Chrome Storage · Fetch API · Canvas API",
+    icon: icon48,
     imgs: [rAItify1, rAItify2, rAItify3],
   },
   {
     title: "Project Title Two",
     desc: "A short description of what this project does and the problem it solves.",
     tech: "Python · AWS · TypeScript",
+    icon: null,
     imgs: [],
   },
   {
     title: "Project Title Three",
     desc: "A short description of what this project does and the problem it solves.",
     tech: "PHP · MSSQL · Tailwind CSS",
+    icon: null,
     imgs: [],
   },
 ];
@@ -67,21 +71,36 @@ export default function Portfolio() {
   const [active, setActive] = useState("About");
   const [proj, setProj] = useState(0);
   const [slide, setSlide] = useState(0);
+  const [lightbox, setLightbox] = useState(false);
   const [form, setForm] = useState({ from_name: "", from_email: "", subject: "", message: "" });
   const [sending, setSending] = useState(false);
   const [status, setStatus] = useState(null);
 
-  const goProj = (n) => {
-    setProj((n + PROJECTS.length) % PROJECTS.length);
+  const openProject = (i) => {
+    setProj(i);
     setSlide(0);
+    setLightbox(true);
   };
+
+  const closeLightbox = () => setLightbox(false);
 
   const currentProj = PROJECTS[proj];
   const imgs = currentProj.imgs || [];
-  const hasImgs = imgs.length > 0;
-  const multiImg = imgs.length > 1;
 
   const goSlide = (n) => setSlide((n + imgs.length) % imgs.length);
+
+  // Close lightbox on Escape key
+  useEffect(() => {
+    const handler = (e) => { if (e.key === "Escape") setLightbox(false); };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, []);
+
+  // Lock body scroll when lightbox open
+  useEffect(() => {
+    document.body.style.overflow = lightbox ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [lightbox]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -127,6 +146,14 @@ export default function Portfolio() {
       setSending(false);
     }
   };
+
+  const PlaceholderIcon = ({ size = 48 }) => (
+    <svg width={size * 0.46} height={size * 0.46} viewBox="0 0 24 24" fill="none" stroke="#ccc" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="3" width="18" height="18" rx="2" />
+      <circle cx="8.5" cy="8.5" r="1.5" />
+      <polyline points="21 15 16 10 5 21" />
+    </svg>
+  );
 
   return (
     <div style={{
@@ -218,22 +245,126 @@ export default function Portfolio() {
         .send-btn:hover:not(:disabled) { background: #1a1a1a; color: #faf9f7; }
         .send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-        .nav-btn {
-          font-family: 'EB Garamond', serif;
-          font-size: 13px;
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
-          background: none;
-          border: 1px solid #1a1a1a;
-          color: #1a1a1a;
-          padding: 7px 18px;
+        /* Project card */
+        .proj-card {
+          display: flex;
+          align-items: center;
+          gap: 20px;
+          padding: 16px 20px;
+          background: #fff;
+          border: 1px solid #e8e5e0;
+          border-radius: 8px;
           cursor: pointer;
-          transition: background 0.2s, color 0.2s;
-          white-space: nowrap;
+          text-align: left;
+          width: 100%;
+          font-family: 'EB Garamond', serif;
+          transition: border-color 0.18s, box-shadow 0.18s;
         }
-        .nav-btn:hover { background: #1a1a1a; color: #faf9f7; }
+        .proj-card:hover {
+          border-color: #1a1a1a;
+        }
+        .proj-card-icon {
+          width: 48px;
+          height: 48px;
+          flex-shrink: 0;
+          border-radius: 10px;
+          border: 1px solid #e8e5e0;
+          background: #f5f3ef;
+          overflow: hidden;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .proj-card-arrow {
+          font-size: 22px;
+          color: #ccc;
+          flex-shrink: 0;
+          line-height: 1;
+          transition: color 0.18s;
+        }
+        .proj-card:hover .proj-card-arrow { color: #888; }
 
-        .dot-btn {
+        /* Lightbox */
+        .lightbox-overlay {
+          position: fixed;
+          inset: 0;
+          z-index: 200;
+          background: rgba(10, 10, 10, 0.6);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 20px;
+        }
+        .lightbox-box {
+          background: #faf9f7;
+          border-radius: 10px;
+          border: 1px solid #ddd;
+          width: 640px;
+          max-width: 100%;
+          font-family: 'EB Garamond', serif;
+          overflow: hidden;
+          display: flex;
+          flex-direction: column;
+        }
+        .lb-header {
+          display: flex;
+          align-items: center;
+          gap: 14px;
+          padding: 16px 20px;
+          border-bottom: 1px solid #eee;
+          flex-shrink: 0;
+        }
+        .lb-icon-wrap {
+          width: 40px;
+          height: 40px;
+          border-radius: 8px;
+          border: 1px solid #e8e5e0;
+          background: #f5f3ef;
+          overflow: hidden;
+          flex-shrink: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .lb-img-stage {
+          background: #f0ede8;
+          min-height: 300px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: relative;
+          flex: 1;
+        }
+        .lb-slide-btn {
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          background: #faf9f7;
+          border: 1px solid #ddd;
+          border-radius: 50%;
+          width: 34px;
+          height: 34px;
+          cursor: pointer;
+          font-size: 18px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #555;
+          transition: background 0.15s;
+          line-height: 1;
+          font-family: 'EB Garamond', serif;
+        }
+        .lb-slide-btn:hover { background: #1a1a1a; color: #faf9f7; border-color: #1a1a1a; }
+        .lb-footer {
+          padding: 12px 20px;
+          border-top: 1px solid #eee;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          flex-shrink: 0;
+        }
+        .lb-dot {
           width: 7px;
           height: 7px;
           border-radius: 50%;
@@ -243,19 +374,20 @@ export default function Portfolio() {
           padding: 0;
           transition: background 0.2s;
         }
-        .dot-btn.dot-active { background: #1a1a1a; }
-
-        .slide-dot {
-          width: 5px;
-          height: 5px;
-          border-radius: 50%;
-          border: 1px solid #999;
-          background: transparent;
+        .lb-dot.active { background: #1a1a1a; }
+        .lb-close-btn {
+          margin-left: auto;
+          background: none;
+          border: none;
           cursor: pointer;
-          padding: 0;
-          transition: background 0.2s, border-color 0.2s;
+          font-size: 22px;
+          color: #888;
+          line-height: 1;
+          padding: 2px 4px;
+          transition: color 0.15s;
+          font-family: 'EB Garamond', serif;
         }
-        .slide-dot.slide-dot-active { background: #555; border-color: #555; }
+        .lb-close-btn:hover { color: #1a1a1a; }
 
         @media (max-width: 640px) {
           .two-col { grid-template-columns: 1fr !important; }
@@ -264,8 +396,7 @@ export default function Portfolio() {
           .about-header .info-links { justify-content: center !important; }
           .about-header .info-titles { justify-content: center !important; }
           .form-two-col { grid-template-columns: 1fr !important; }
-          .carousel-footer { flex-direction: column !important; gap: 12px !important; }
-          .ctrl-bar { flex-wrap: wrap !important; }
+          .proj-card { gap: 14px; padding: 14px 16px; }
         }
       `}</style>
 
@@ -399,9 +530,9 @@ export default function Portfolio() {
             <p style={{ fontSize: 15, lineHeight: 1.85, color: "#333" }}>
               BSIT student at Adamson University specializing in network infrastructure and data security.
               Pursuing a career in cloud engineering and architecture with hands-on experience across AWS,
-              full-stack web development, and cybersecurity. Certified in cybersecurity (CC) BY ISC2.
+              full-stack web development, and cybersecurity. Certified in cybersecurity (CC) by ISC2.
 
-              VALORANT GOD (Duelist), Counter-Strike (Entry Fragger), League of Legends (Thrower) & Comic Nerd.
+              VALORANT GOD (Duelist), Counter-Strike (Entry Fragger), League of Legends (Thrower) &amp; Comic Nerd.
             </p>
           </div>
         </section>
@@ -415,128 +546,139 @@ export default function Portfolio() {
           </h2>
           <hr className="rule" style={{ marginBottom: 24 }} />
 
-          {/* Image stage — no arrows inside */}
-          <div style={{
-            background: "#f0ede8",
-            border: "1px solid #ddd",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            minHeight: 340,
-            overflow: "hidden",
-          }}>
-            {hasImgs ? (
-              <img
-                key={`${proj}-${slide}`}
-                src={imgs[slide]}
-                alt={`${currentProj.title} screenshot ${slide + 1}`}
-                style={{
-                  maxWidth: "100%",
-                  maxHeight: 420,
-                  width: "auto",
-                  height: "auto",
-                  objectFit: "contain",
-                  display: "block",
-                  padding: "24px 32px",
-                }}
-              />
-            ) : (
-              <div style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 12,
-                height: 340,
-                color: "#bbb",
-                fontStyle: "italic",
-                fontSize: 14,
-              }}>
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ccc" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
-                  <rect x="3" y="3" width="18" height="18" rx="2" />
-                  <circle cx="8.5" cy="8.5" r="1.5" />
-                  <polyline points="21 15 16 10 5 21" />
-                </svg>
-                <span>Add your project images</span>
-              </div>
-            )}
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            {PROJECTS.map((p, i) => (
+              <button
+                key={i}
+                className="proj-card"
+                onClick={() => openProject(i)}
+              >
+                {/* Icon */}
+                <div className="proj-card-icon">
+                  {p.icon
+                    ? <img src={p.icon} alt={p.title + " icon"} style={{ width: 48, height: 48, objectFit: "cover" }} />
+                    : <PlaceholderIcon size={48} />
+                  }
+                </div>
+
+                {/* Info */}
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <p style={{ fontSize: 15, fontWeight: 500, margin: "0 0 4px", color: "#1a1a1a" }}>{p.title}</p>
+                  <p style={{
+                    fontSize: 13, color: "#666", margin: "0 0 6px", lineHeight: 1.5,
+                    whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
+                  }}>{p.desc}</p>
+                  <p style={{ fontSize: 11, letterSpacing: "0.1em", textTransform: "uppercase", color: "#aaa", margin: 0 }}>
+                    {p.tech}
+                  </p>
+                </div>
+
+                {/* Arrow */}
+                <span className="proj-card-arrow">›</span>
+              </button>
+            ))}
           </div>
 
-          {/* ── Control bar below the image ── */}
-          <div className="ctrl-bar" style={{
-            borderBottom: "1px solid #eee",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: 12,
-            padding: "10px 0",
-          }}>
-            {/* Left: project prev/next */}
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <button className="nav-btn" onClick={() => goProj(proj - 1)} aria-label="Previous project">← Prev</button>
-              <button className="nav-btn" onClick={() => goProj(proj + 1)} aria-label="Next project">Next →</button>
-            </div>
+          {/* LIGHTBOX */}
+          {lightbox && (
+            <div
+              className="lightbox-overlay"
+              onClick={closeLightbox}
+            >
+              <div
+                className="lightbox-box"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {/* Header */}
+                <div className="lb-header">
+                  <div className="lb-icon-wrap">
+                    {currentProj.icon
+                      ? <img src={currentProj.icon} alt="" style={{ width: 40, height: 40, objectFit: "cover" }} />
+                      : <PlaceholderIcon size={40} />
+                    }
+                  </div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <p style={{ fontSize: 16, fontWeight: 500, margin: "0 0 2px", color: "#1a1a1a" }}>
+                      {currentProj.title}
+                    </p>
+                    <p style={{ fontSize: 12, color: "#888", margin: 0, fontStyle: "italic", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                      {currentProj.desc}
+                    </p>
+                  </div>
+                  <button className="lb-close-btn" onClick={closeLightbox} aria-label="Close">×</button>
+                </div>
 
-            {/* Center: screenshot dots (only when multiple) */}
-            {multiImg && (
-              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                {imgs.map((_, i) => (
-                  <button
-                    key={i}
-                    className={`slide-dot${i === slide ? " slide-dot-active" : ""}`}
-                    onClick={() => setSlide(i)}
-                    aria-label={`Screenshot ${i + 1}`}
-                  />
-                ))}
-                <span style={{ fontSize: 11, color: "#bbb", letterSpacing: "0.08em", marginLeft: 4 }}>
-                  {slide + 1}/{imgs.length}
-                </span>
+                {/* Image stage */}
+                <div className="lb-img-stage">
+                  {imgs.length > 0 ? (
+                    <>
+                      <img
+                        key={`${proj}-${slide}`}
+                        src={imgs[slide]}
+                        alt={`${currentProj.title} screenshot ${slide + 1}`}
+                        style={{
+                          maxWidth: "100%",
+                          maxHeight: 380,
+                          width: "auto",
+                          height: "auto",
+                          objectFit: "contain",
+                          display: "block",
+                          padding: "20px 56px",
+                        }}
+                      />
+                      {imgs.length > 1 && (
+                        <>
+                          <button
+                            className="lb-slide-btn"
+                            style={{ left: 10 }}
+                            onClick={() => goSlide(slide - 1)}
+                            aria-label="Previous screenshot"
+                          >‹</button>
+                          <button
+                            className="lb-slide-btn"
+                            style={{ right: 10 }}
+                            onClick={() => goSlide(slide + 1)}
+                            aria-label="Next screenshot"
+                          >›</button>
+                        </>
+                      )}
+                    </>
+                  ) : (
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, color: "#bbb", fontStyle: "italic", fontSize: 14 }}>
+                      <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#ccc" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="2" />
+                        <circle cx="8.5" cy="8.5" r="1.5" />
+                        <polyline points="21 15 16 10 5 21" />
+                      </svg>
+                      <span>No screenshots yet</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Tech tags + dots footer */}
+                <div className="lb-footer" style={{ flexDirection: "column", gap: 10 }}>
+                  <p style={{ fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase", color: "#aaa", margin: 0, textAlign: "center" }}>
+                    {currentProj.tech}
+                  </p>
+                  {imgs.length > 1 && (
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      {imgs.map((_, i) => (
+                        <button
+                          key={i}
+                          className={`lb-dot${i === slide ? " active" : ""}`}
+                          onClick={() => setSlide(i)}
+                          aria-label={`Screenshot ${i + 1}`}
+                        />
+                      ))}
+                      <span style={{ fontSize: 11, color: "#aaa", letterSpacing: "0.08em", marginLeft: 4 }}>
+                        {slide + 1} / {imgs.length}
+                      </span>
+                    </div>
+                  )}
+                </div>
               </div>
-            )}
-
-            {/* Right: screenshot prev/next (only when multiple) */}
-            {multiImg ? (
-              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <button className="nav-btn" onClick={() => goSlide(slide - 1)} aria-label="Previous screenshot">‹ Shot</button>
-                <button className="nav-btn" onClick={() => goSlide(slide + 1)} aria-label="Next screenshot">Shot ›</button>
-              </div>
-            ) : (
-              /* spacer so left buttons don't drift when no screenshot nav */
-              <div />
-            )}
-          </div>
-
-          {/* Project info + project dots */}
-          <div className="carousel-footer" style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "flex-end",
-            marginTop: 18,
-            gap: 16,
-          }}>
-            <div style={{ flex: 1 }}>
-              <p style={{ fontSize: 18, fontWeight: 500, marginBottom: 5 }}>{currentProj.title}</p>
-              <p style={{ fontSize: 14, color: "#555", fontStyle: "italic", lineHeight: 1.65 }}>{currentProj.desc}</p>
-              <p style={{ fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase", color: "#aaa", marginTop: 8 }}>
-                {currentProj.tech}
-              </p>
             </div>
-
-            {/* Project dots + counter */}
-            <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0, paddingBottom: 4 }}>
-              {PROJECTS.map((_, i) => (
-                <button
-                  key={i}
-                  className={`dot-btn${i === proj ? " dot-active" : ""}`}
-                  onClick={() => goProj(i)}
-                  aria-label={`Go to project ${i + 1}`}
-                />
-              ))}
-              <span style={{ fontSize: 12, color: "#aaa", letterSpacing: "0.08em", marginLeft: 6 }}>
-                {proj + 1} / {PROJECTS.length}
-              </span>
-            </div>
-          </div>
+          )}
         </section>
 
         <hr className="rule" />
