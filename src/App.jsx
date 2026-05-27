@@ -17,7 +17,7 @@ const SKILLS = {
   ],
   Backend: [
     { name: "Node.js", tag: "LTS" },
-    { name: "Python", tag: "3.12" },
+    { name: "Python", tag: "3g.12" },
     { name: "PHP", tag: "8.3" },
     { name: "MySQL", tag: "8.0" },
     { name: "MSSQL", tag: "2022" },
