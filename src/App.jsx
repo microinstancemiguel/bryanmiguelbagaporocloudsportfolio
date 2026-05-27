@@ -40,40 +40,53 @@ const CERTS = [
   { title: "Certified in Cybersecurity (CC)", org: "ISC2", year: "2026", status: "Active" },
 ];
 
-// ─── REPLACE WITH YOUR REAL PROJECTS ────────────────────────────────────────
-// img: import your image at the top and reference it here (e.g. img: proj1)
-// Leave img: null until you have the files ready — a placeholder will show.
+// ─── PROJECTS ───────────────────────────────────────────────────────────────
+// imgs: array of images — add as many screenshots as you want per project.
+// Leave imgs: [] if you don't have images yet — a placeholder will show.
 const PROJECTS = [
   {
     title: "rAItify v1",
     desc: "A Browser Extension that Detects A.I Contents",
-    tech: "JSVanilla · Chrome Extension (ManifestV3) · GroqAPI-Llama4Scout · Node.js · Git + Github ·MutationObserver · Chrome Storage · FetchAPI · CanvasAPI ",
-    img: rAItify1,
+    tech: "JS Vanilla · Chrome Extension (Manifest V3) · Groq API Llama4 Scout · Node.js · Git + GitHub · MutationObserver · Chrome Storage · Fetch API · Canvas API",
+    imgs: [rAItify1, rAItify2, rAItify3],
   },
   {
     title: "Project Title Two",
     desc: "A short description of what this project does and the problem it solves.",
     tech: "Python · AWS · TypeScript",
-    img: null,
+    imgs: [],
   },
   {
     title: "Project Title Three",
     desc: "A short description of what this project does and the problem it solves.",
     tech: "PHP · MSSQL · Tailwind CSS",
-    img: null,
+    imgs: [],
   },
 ];
+// ────────────────────────────────────────────────────────────────────────────
 
 const NAV = ["About", "Projects", "Certificates", "Stack", "Contact"];
 
 export default function Portfolio() {
   const [active, setActive] = useState("About");
-  const [proj, setProj] = useState(0);
+  const [proj, setProj] = useState(0);           // which project
+  const [slide, setSlide] = useState(0);          // which screenshot within that project
   const [form, setForm] = useState({ from_name: "", from_email: "", subject: "", message: "" });
   const [sending, setSending] = useState(false);
   const [status, setStatus] = useState(null);
 
-  const goProj = (n) => setProj((n + PROJECTS.length) % PROJECTS.length);
+  // Reset screenshot index when switching projects
+  const goProj = (n) => {
+    setProj((n + PROJECTS.length) % PROJECTS.length);
+    setSlide(0);
+  };
+
+  const currentProj = PROJECTS[proj];
+  const imgs = currentProj.imgs || [];
+  const hasImgs = imgs.length > 0;
+  const multiImg = imgs.length > 1;
+
+  const goSlide = (n) => setSlide((n + imgs.length) % imgs.length);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -119,8 +132,6 @@ export default function Portfolio() {
       setSending(false);
     }
   };
-
-  const currentProj = PROJECTS[proj];
 
   return (
     <div style={{
@@ -243,6 +254,37 @@ export default function Portfolio() {
           transition: background 0.2s;
         }
         .dot-btn.dot-active { background: #1a1a1a; }
+
+        .slide-dot {
+          width: 5px;
+          height: 5px;
+          border-radius: 50%;
+          border: 1px solid #888;
+          background: transparent;
+          cursor: pointer;
+          padding: 0;
+          transition: background 0.2s, border-color 0.2s;
+        }
+        .slide-dot.slide-dot-active { background: #555; border-color: #555; }
+
+        .slide-nav {
+          background: rgba(250,249,247,0.85);
+          border: 1px solid #ccc;
+          width: 28px;
+          height: 28px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          font-size: 13px;
+          transition: background 0.2s, border-color 0.2s;
+          color: #555;
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          z-index: 3;
+        }
+        .slide-nav:hover { background: #1a1a1a; color: #faf9f7; border-color: #1a1a1a; }
 
         @media (max-width: 640px) {
           .two-col { grid-template-columns: 1fr !important; }
@@ -401,73 +443,68 @@ export default function Portfolio() {
           </h2>
           <hr className="rule" style={{ marginBottom: 24 }} />
 
-          {/* Carousel Stage */}
-          <div style={{
-            position: "relative",
-            background: "#f0ede8",
-            border: "1px solid #ddd",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            minHeight: 340,
-            overflow: "hidden",
-          }}>
-            {/* Prev */}
-            <button className="carousel-nav-btn" style={{ left: 12 }} onClick={() => goProj(proj - 1)} aria-label="Previous project">
-              ←
-            </button>
+          {/* ── Outer carousel: switch projects ── */}
+          <div style={{ position: "relative", background: "#f0ede8", border: "1px solid #ddd", display: "flex", alignItems: "center", justifyContent: "center", minHeight: 340, overflow: "hidden" }}>
 
-            {/* Image or placeholder */}
-            {currentProj.img ? (
-              <img
-                src={currentProj.img}
-                alt={currentProj.title}
-                style={{
-                  maxWidth: "100%",
-                  maxHeight: 420,
-                  width: "auto",
-                  height: "auto",
-                  objectFit: "contain",
-                  display: "block",
-                  padding: "24px 60px",
-                }}
-              />
+            {/* Outer prev (switch project) */}
+            <button className="carousel-nav-btn" style={{ left: 12 }} onClick={() => goProj(proj - 1)} aria-label="Previous project">←</button>
+
+            {/* ── Inner area: screenshot + inner nav ── */}
+            {hasImgs ? (
+              <div style={{ position: "relative", width: "100%", display: "flex", alignItems: "center", justifyContent: "center", padding: "24px 56px" }}>
+                <img
+                  key={`${proj}-${slide}`}
+                  src={imgs[slide]}
+                  alt={`${currentProj.title} screenshot ${slide + 1}`}
+                  style={{
+                    maxWidth: "100%",
+                    maxHeight: 420,
+                    width: "auto",
+                    height: "auto",
+                    objectFit: "contain",
+                    display: "block",
+                  }}
+                />
+
+                {/* Inner slide prev — only shown when multiple screenshots */}
+                {multiImg && (
+                  <button className="slide-nav" style={{ left: 8 }} onClick={() => goSlide(slide - 1)} aria-label="Previous screenshot">‹</button>
+                )}
+                {multiImg && (
+                  <button className="slide-nav" style={{ right: 8 }} onClick={() => goSlide(slide + 1)} aria-label="Next screenshot">›</button>
+                )}
+              </div>
             ) : (
-              <div style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 12,
-                height: 340,
-                color: "#bbb",
-                fontStyle: "italic",
-                fontSize: 14,
-              }}>
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 12, height: 340, color: "#bbb", fontStyle: "italic", fontSize: 14 }}>
                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ccc" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
                   <rect x="3" y="3" width="18" height="18" rx="2" />
                   <circle cx="8.5" cy="8.5" r="1.5" />
                   <polyline points="21 15 16 10 5 21" />
                 </svg>
-                <span>Add your project image</span>
+                <span>Add your project images</span>
               </div>
             )}
 
-            {/* Next */}
-            <button className="carousel-nav-btn" style={{ right: 12 }} onClick={() => goProj(proj + 1)} aria-label="Next project">
-              →
-            </button>
+            {/* Outer next (switch project) */}
+            <button className="carousel-nav-btn" style={{ right: 12 }} onClick={() => goProj(proj + 1)} aria-label="Next project">→</button>
           </div>
 
-          {/* Footer: info + indicators */}
-          <div className="carousel-footer" style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "flex-end",
-            marginTop: 18,
-            gap: 16,
-          }}>
-            {/* Project info */}
+          {/* Screenshot dots (inner) — only when multiple screenshots */}
+          {multiImg && (
+            <div style={{ display: "flex", justifyContent: "center", gap: 6, marginTop: 10 }}>
+              {imgs.map((_, i) => (
+                <button
+                  key={i}
+                  className={`slide-dot${i === slide ? " slide-dot-active" : ""}`}
+                  onClick={() => setSlide(i)}
+                  aria-label={`Screenshot ${i + 1}`}
+                />
+              ))}
+            </div>
+          )}
+
+          {/* Footer: project info + project dots */}
+          <div className="carousel-footer" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginTop: 18, gap: 16 }}>
             <div style={{ flex: 1 }}>
               <p style={{ fontSize: 18, fontWeight: 500, marginBottom: 5 }}>{currentProj.title}</p>
               <p style={{ fontSize: 14, color: "#555", fontStyle: "italic", lineHeight: 1.65 }}>{currentProj.desc}</p>
@@ -476,13 +513,13 @@ export default function Portfolio() {
               </p>
             </div>
 
-            {/* Dot indicators + counter */}
+            {/* Project dots + counter */}
             <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0, paddingBottom: 4 }}>
               {PROJECTS.map((_, i) => (
                 <button
                   key={i}
                   className={`dot-btn${i === proj ? " dot-active" : ""}`}
-                  onClick={() => setProj(i)}
+                  onClick={() => goProj(i)}
                   aria-label={`Go to project ${i + 1}`}
                 />
               ))}
@@ -549,7 +586,6 @@ export default function Portfolio() {
           </h2>
           <hr className="rule" style={{ marginBottom: 32 }} />
 
-          {/* Contact links */}
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 0, marginBottom: 40 }} className="two-col">
             {[
               { label: "Email", val: "bryanmiguelbagaporoclouds@gmail.com", href: "mailto:bryanmiguelbagaporoclouds@gmail.com" },
@@ -576,7 +612,6 @@ export default function Portfolio() {
             ))}
           </div>
 
-          {/* Contact Form */}
           <div>
             <p style={{ fontSize: 11, letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 24, color: "#888" }}>
               Send a Message
@@ -584,58 +619,23 @@ export default function Portfolio() {
 
             <div className="form-two-col" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 32px", marginBottom: 22 }}>
               <div>
-                <label style={{ fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: "#888", display: "block", marginBottom: 7 }}>
-                  Name
-                </label>
-                <input
-                  className="form-input"
-                  name="from_name"
-                  type="text"
-                  placeholder="Your name"
-                  value={form.from_name}
-                  onChange={handleChange}
-                />
+                <label style={{ fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: "#888", display: "block", marginBottom: 7 }}>Name</label>
+                <input className="form-input" name="from_name" type="text" placeholder="Your name" value={form.from_name} onChange={handleChange} />
               </div>
               <div>
-                <label style={{ fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: "#888", display: "block", marginBottom: 7 }}>
-                  Email
-                </label>
-                <input
-                  className="form-input"
-                  name="from_email"
-                  type="email"
-                  placeholder="your@email.com"
-                  value={form.from_email}
-                  onChange={handleChange}
-                />
+                <label style={{ fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: "#888", display: "block", marginBottom: 7 }}>Email</label>
+                <input className="form-input" name="from_email" type="email" placeholder="your@email.com" value={form.from_email} onChange={handleChange} />
               </div>
             </div>
 
             <div style={{ marginBottom: 22 }}>
-              <label style={{ fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: "#888", display: "block", marginBottom: 7 }}>
-                Subject
-              </label>
-              <input
-                className="form-input"
-                name="subject"
-                type="text"
-                placeholder="What's this about?"
-                value={form.subject}
-                onChange={handleChange}
-              />
+              <label style={{ fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: "#888", display: "block", marginBottom: 7 }}>Subject</label>
+              <input className="form-input" name="subject" type="text" placeholder="What's this about?" value={form.subject} onChange={handleChange} />
             </div>
 
             <div style={{ marginBottom: 28 }}>
-              <label style={{ fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: "#888", display: "block", marginBottom: 7 }}>
-                Message
-              </label>
-              <textarea
-                className="form-input"
-                name="message"
-                placeholder="Your message..."
-                value={form.message}
-                onChange={handleChange}
-              />
+              <label style={{ fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: "#888", display: "block", marginBottom: 7 }}>Message</label>
+              <textarea className="form-input" name="message" placeholder="Your message..." value={form.message} onChange={handleChange} />
             </div>
 
             <button className="send-btn" onClick={handleSubmit} disabled={sending}>
@@ -643,12 +643,7 @@ export default function Portfolio() {
             </button>
 
             {status && (
-              <p style={{
-                fontSize: 13,
-                marginTop: 14,
-                fontStyle: "italic",
-                color: status.type === "success" ? "#2d6a4f" : "#9b2226",
-              }}>
+              <p style={{ fontSize: 13, marginTop: 14, fontStyle: "italic", color: status.type === "success" ? "#2d6a4f" : "#9b2226" }}>
                 {status.text}
               </p>
             )}
@@ -656,7 +651,6 @@ export default function Portfolio() {
         </section>
       </main>
 
-      {/* FOOTER */}
       <footer style={{ borderTop: "1px solid #1a1a1a", padding: "18px 40px", maxWidth: 800, margin: "0 auto" }}>
         <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, color: "#aaa", letterSpacing: "0.06em" }}>
           <span>Bryan Miguel Bagaporo · Manila, PH</span>
