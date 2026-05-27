@@ -40,9 +40,6 @@ const CERTS = [
   { title: "Certified in Cybersecurity (CC)", org: "ISC2", year: "2026", status: "Active" },
 ];
 
-// ─── PROJECTS ───────────────────────────────────────────────────────────────
-// imgs: array of images — add as many screenshots as you want per project.
-// Leave imgs: [] if you don't have images yet — a placeholder will show.
 const PROJECTS = [
   {
     title: "rAItify v1",
@@ -63,19 +60,17 @@ const PROJECTS = [
     imgs: [],
   },
 ];
-// ────────────────────────────────────────────────────────────────────────────
 
 const NAV = ["About", "Projects", "Certificates", "Stack", "Contact"];
 
 export default function Portfolio() {
   const [active, setActive] = useState("About");
-  const [proj, setProj] = useState(0);           // which project
-  const [slide, setSlide] = useState(0);          // which screenshot within that project
+  const [proj, setProj] = useState(0);
+  const [slide, setSlide] = useState(0);
   const [form, setForm] = useState({ from_name: "", from_email: "", subject: "", message: "" });
   const [sending, setSending] = useState(false);
   const [status, setStatus] = useState(null);
 
-  // Reset screenshot index when switching projects
   const goProj = (n) => {
     setProj((n + PROJECTS.length) % PROJECTS.length);
     setSlide(0);
@@ -223,25 +218,20 @@ export default function Portfolio() {
         .send-btn:hover:not(:disabled) { background: #1a1a1a; color: #faf9f7; }
         .send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-        .carousel-nav-btn {
-          position: absolute;
-          top: 50%;
-          transform: translateY(-50%);
-          background: #faf9f7;
-          border: 1px solid #1a1a1a;
-          width: 36px;
-          height: 36px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          font-size: 16px;
-          transition: background 0.2s, color 0.2s;
-          z-index: 2;
+        .nav-btn {
           font-family: 'EB Garamond', serif;
+          font-size: 13px;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          background: none;
+          border: 1px solid #1a1a1a;
           color: #1a1a1a;
+          padding: 7px 18px;
+          cursor: pointer;
+          transition: background 0.2s, color 0.2s;
+          white-space: nowrap;
         }
-        .carousel-nav-btn:hover { background: #1a1a1a; color: #faf9f7; }
+        .nav-btn:hover { background: #1a1a1a; color: #faf9f7; }
 
         .dot-btn {
           width: 7px;
@@ -259,32 +249,13 @@ export default function Portfolio() {
           width: 5px;
           height: 5px;
           border-radius: 50%;
-          border: 1px solid #888;
+          border: 1px solid #999;
           background: transparent;
           cursor: pointer;
           padding: 0;
           transition: background 0.2s, border-color 0.2s;
         }
         .slide-dot.slide-dot-active { background: #555; border-color: #555; }
-
-        .slide-nav {
-          background: rgba(250,249,247,0.85);
-          border: 1px solid #ccc;
-          width: 28px;
-          height: 28px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          font-size: 13px;
-          transition: background 0.2s, border-color 0.2s;
-          color: #555;
-          position: absolute;
-          top: 50%;
-          transform: translateY(-50%);
-          z-index: 3;
-        }
-        .slide-nav:hover { background: #1a1a1a; color: #faf9f7; border-color: #1a1a1a; }
 
         @media (max-width: 640px) {
           .two-col { grid-template-columns: 1fr !important; }
@@ -294,6 +265,7 @@ export default function Portfolio() {
           .about-header .info-titles { justify-content: center !important; }
           .form-two-col { grid-template-columns: 1fr !important; }
           .carousel-footer { flex-direction: column !important; gap: 12px !important; }
+          .ctrl-bar { flex-wrap: wrap !important; }
         }
       `}</style>
 
@@ -443,39 +415,43 @@ export default function Portfolio() {
           </h2>
           <hr className="rule" style={{ marginBottom: 24 }} />
 
-          {/* ── Outer carousel: switch projects ── */}
-          <div style={{ position: "relative", background: "#f0ede8", border: "1px solid #ddd", display: "flex", alignItems: "center", justifyContent: "center", minHeight: 340, overflow: "hidden" }}>
-
-            {/* Outer prev (switch project) */}
-            <button className="carousel-nav-btn" style={{ left: 12 }} onClick={() => goProj(proj - 1)} aria-label="Previous project">←</button>
-
-            {/* ── Inner area: screenshot + inner nav ── */}
+          {/* Image stage — no arrows inside */}
+          <div style={{
+            background: "#f0ede8",
+            border: "1px solid #ddd",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            minHeight: 340,
+            overflow: "hidden",
+          }}>
             {hasImgs ? (
-              <div style={{ position: "relative", width: "100%", display: "flex", alignItems: "center", justifyContent: "center", padding: "24px 56px" }}>
-                <img
-                  key={`${proj}-${slide}`}
-                  src={imgs[slide]}
-                  alt={`${currentProj.title} screenshot ${slide + 1}`}
-                  style={{
-                    maxWidth: "100%",
-                    maxHeight: 420,
-                    width: "auto",
-                    height: "auto",
-                    objectFit: "contain",
-                    display: "block",
-                  }}
-                />
-
-                {/* Inner slide prev — only shown when multiple screenshots */}
-                {multiImg && (
-                  <button className="slide-nav" style={{ left: 8 }} onClick={() => goSlide(slide - 1)} aria-label="Previous screenshot">‹</button>
-                )}
-                {multiImg && (
-                  <button className="slide-nav" style={{ right: 8 }} onClick={() => goSlide(slide + 1)} aria-label="Next screenshot">›</button>
-                )}
-              </div>
+              <img
+                key={`${proj}-${slide}`}
+                src={imgs[slide]}
+                alt={`${currentProj.title} screenshot ${slide + 1}`}
+                style={{
+                  maxWidth: "100%",
+                  maxHeight: 420,
+                  width: "auto",
+                  height: "auto",
+                  objectFit: "contain",
+                  display: "block",
+                  padding: "24px 32px",
+                }}
+              />
             ) : (
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 12, height: 340, color: "#bbb", fontStyle: "italic", fontSize: 14 }}>
+              <div style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 12,
+                height: 340,
+                color: "#bbb",
+                fontStyle: "italic",
+                fontSize: 14,
+              }}>
                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ccc" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
                   <rect x="3" y="3" width="18" height="18" rx="2" />
                   <circle cx="8.5" cy="8.5" r="1.5" />
@@ -484,27 +460,60 @@ export default function Portfolio() {
                 <span>Add your project images</span>
               </div>
             )}
-
-            {/* Outer next (switch project) */}
-            <button className="carousel-nav-btn" style={{ right: 12 }} onClick={() => goProj(proj + 1)} aria-label="Next project">→</button>
           </div>
 
-          {/* Screenshot dots (inner) — only when multiple screenshots */}
-          {multiImg && (
-            <div style={{ display: "flex", justifyContent: "center", gap: 6, marginTop: 10 }}>
-              {imgs.map((_, i) => (
-                <button
-                  key={i}
-                  className={`slide-dot${i === slide ? " slide-dot-active" : ""}`}
-                  onClick={() => setSlide(i)}
-                  aria-label={`Screenshot ${i + 1}`}
-                />
-              ))}
+          {/* ── Control bar below the image ── */}
+          <div className="ctrl-bar" style={{
+            borderBottom: "1px solid #eee",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 12,
+            padding: "10px 0",
+          }}>
+            {/* Left: project prev/next */}
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <button className="nav-btn" onClick={() => goProj(proj - 1)} aria-label="Previous project">← Prev</button>
+              <button className="nav-btn" onClick={() => goProj(proj + 1)} aria-label="Next project">Next →</button>
             </div>
-          )}
 
-          {/* Footer: project info + project dots */}
-          <div className="carousel-footer" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginTop: 18, gap: 16 }}>
+            {/* Center: screenshot dots (only when multiple) */}
+            {multiImg && (
+              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                {imgs.map((_, i) => (
+                  <button
+                    key={i}
+                    className={`slide-dot${i === slide ? " slide-dot-active" : ""}`}
+                    onClick={() => setSlide(i)}
+                    aria-label={`Screenshot ${i + 1}`}
+                  />
+                ))}
+                <span style={{ fontSize: 11, color: "#bbb", letterSpacing: "0.08em", marginLeft: 4 }}>
+                  {slide + 1}/{imgs.length}
+                </span>
+              </div>
+            )}
+
+            {/* Right: screenshot prev/next (only when multiple) */}
+            {multiImg ? (
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <button className="nav-btn" onClick={() => goSlide(slide - 1)} aria-label="Previous screenshot">‹ Shot</button>
+                <button className="nav-btn" onClick={() => goSlide(slide + 1)} aria-label="Next screenshot">Shot ›</button>
+              </div>
+            ) : (
+              /* spacer so left buttons don't drift when no screenshot nav */
+              <div />
+            )}
+          </div>
+
+          {/* Project info + project dots */}
+          <div className="carousel-footer" style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-end",
+            marginTop: 18,
+            gap: 16,
+          }}>
             <div style={{ flex: 1 }}>
               <p style={{ fontSize: 18, fontWeight: 500, marginBottom: 5 }}>{currentProj.title}</p>
               <p style={{ fontSize: 14, color: "#555", fontStyle: "italic", lineHeight: 1.65 }}>{currentProj.desc}</p>
