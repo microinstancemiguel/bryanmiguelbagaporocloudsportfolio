@@ -44,7 +44,7 @@ const CERTS = [
 const PROJECTS = [
   {
     title: "rAItify v1",
-    desc: "A Browser Extension that Detects A.I Contents. Powered by GROQ LLama Scout",
+    desc: "A browser extension that detects A.I contents. Powered by GROQ Llama Scout",
     tech: "JS Vanilla · Chrome Extension (Manifest V3) · Groq API Llama4 Scout · Node.js · Git + GitHub · MutationObserver · Chrome Storage · Fetch API · Canvas API",
     icon: icon48,
     imgs: [rAItify1, rAItify2, rAItify3],
