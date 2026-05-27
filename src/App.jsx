@@ -32,7 +32,6 @@ const SKILLS = {
     { name: "Nmap - Zenmap" },
     { name: "XAMPP" },
     { name: "ADOBE", tag: "Illustrator" },
-    { name: "Clerical Ability" },
   ],
 };
 
