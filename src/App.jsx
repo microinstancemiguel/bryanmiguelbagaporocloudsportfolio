@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import emailjs from "@emailjs/browser";
 import photo from "./AIGoatman.jpg";
 import icon48 from "./icon48.png";
-import Linknayan48 from "./LinkNayan48.png";
+import Linknayan48 from "./Linknayan48.png";
 import rAItify1 from "./rAI1.png";
 import rAItify2 from "./rAI2.png";
 import rAItify3 from "./rAI3.png";
