@@ -1,7 +1,9 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import emailjs from "@emailjs/browser";
 import photo from "./AIGoatman.jpg";
-import ccitLogo from "./CCIT.jpg";
+import rAItify1 from "./rAI1.png";
+import rAItify2 from "./rAI2.png";
+import rAItify3 from "./rAI3.png";
 emailjs.init("vNfhSk7yAHwtaMihM");
 
 const SKILLS = {
@@ -38,13 +40,40 @@ const CERTS = [
   { title: "Certified in Cybersecurity (CC)", org: "ISC2", year: "2026", status: "Active" },
 ];
 
-const NAV = ["About", "Certificates", "Stack", "Contact"];
+// ─── REPLACE WITH YOUR REAL PROJECTS ────────────────────────────────────────
+// img: import your image at the top and reference it here (e.g. img: proj1)
+// Leave img: null until you have the files ready — a placeholder will show.
+const PROJECTS = [
+  {
+    title: "rAItify v1",
+    desc: "A Browser Extension that Detects A.I Contents",
+    tech: "JSVanilla · Chrome Extension (ManifestV3) · GroqAPI-Llama4Scout · Node.js · Git + Github ·MutationObserver · Chrome Storage · FetchAPI · CanvasAPI ",
+    img: rAItify1,
+  },
+  {
+    title: "Project Title Two",
+    desc: "A short description of what this project does and the problem it solves.",
+    tech: "Python · AWS · TypeScript",
+    img: null,
+  },
+  {
+    title: "Project Title Three",
+    desc: "A short description of what this project does and the problem it solves.",
+    tech: "PHP · MSSQL · Tailwind CSS",
+    img: null,
+  },
+];
+
+const NAV = ["About", "Projects", "Certificates", "Stack", "Contact"];
 
 export default function Portfolio() {
   const [active, setActive] = useState("About");
+  const [proj, setProj] = useState(0);
   const [form, setForm] = useState({ from_name: "", from_email: "", subject: "", message: "" });
   const [sending, setSending] = useState(false);
-  const [status, setStatus] = useState(null); // { type: "success" | "error", text: string }
+  const [status, setStatus] = useState(null);
+
+  const goProj = (n) => setProj((n + PROJECTS.length) % PROJECTS.length);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -90,6 +119,8 @@ export default function Portfolio() {
       setSending(false);
     }
   };
+
+  const currentProj = PROJECTS[proj];
 
   return (
     <div style={{
@@ -181,6 +212,38 @@ export default function Portfolio() {
         .send-btn:hover:not(:disabled) { background: #1a1a1a; color: #faf9f7; }
         .send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
+        .carousel-nav-btn {
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          background: #faf9f7;
+          border: 1px solid #1a1a1a;
+          width: 36px;
+          height: 36px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          font-size: 16px;
+          transition: background 0.2s, color 0.2s;
+          z-index: 2;
+          font-family: 'EB Garamond', serif;
+          color: #1a1a1a;
+        }
+        .carousel-nav-btn:hover { background: #1a1a1a; color: #faf9f7; }
+
+        .dot-btn {
+          width: 7px;
+          height: 7px;
+          border-radius: 50%;
+          border: 1px solid #1a1a1a;
+          background: transparent;
+          cursor: pointer;
+          padding: 0;
+          transition: background 0.2s;
+        }
+        .dot-btn.dot-active { background: #1a1a1a; }
+
         @media (max-width: 640px) {
           .two-col { grid-template-columns: 1fr !important; }
           .hide-mobile { display: none !important; }
@@ -188,6 +251,7 @@ export default function Portfolio() {
           .about-header .info-links { justify-content: center !important; }
           .about-header .info-titles { justify-content: center !important; }
           .form-two-col { grid-template-columns: 1fr !important; }
+          .carousel-footer { flex-direction: column !important; gap: 12px !important; }
         }
       `}</style>
 
@@ -321,10 +385,111 @@ export default function Portfolio() {
             <p style={{ fontSize: 15, lineHeight: 1.85, color: "#333" }}>
               BSIT student at Adamson University specializing in network infrastructure and data security.
               Pursuing a career in cloud engineering and architecture with hands-on experience across AWS,
-              full-stack web development, and cybersecurity. Certified in cybersecurity (CC) BY ISC2. 
+              full-stack web development, and cybersecurity. Certified in cybersecurity (CC) BY ISC2.
 
               VALORANT GOD (Duelist), Counter-Strike (Entry Fragger), League of Legends (Thrower) & Comic Nerd.
             </p>
+          </div>
+        </section>
+
+        <hr className="rule" />
+
+        {/* PROJECTS */}
+        <section id="Projects" style={{ paddingTop: 56, paddingBottom: 56 }}>
+          <h2 style={{ fontSize: 11, letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 10, fontWeight: 500 }}>
+            Projects
+          </h2>
+          <hr className="rule" style={{ marginBottom: 24 }} />
+
+          {/* Carousel Stage */}
+          <div style={{
+            position: "relative",
+            background: "#f0ede8",
+            border: "1px solid #ddd",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            minHeight: 340,
+            overflow: "hidden",
+          }}>
+            {/* Prev */}
+            <button className="carousel-nav-btn" style={{ left: 12 }} onClick={() => goProj(proj - 1)} aria-label="Previous project">
+              ←
+            </button>
+
+            {/* Image or placeholder */}
+            {currentProj.img ? (
+              <img
+                src={currentProj.img}
+                alt={currentProj.title}
+                style={{
+                  maxWidth: "100%",
+                  maxHeight: 420,
+                  width: "auto",
+                  height: "auto",
+                  objectFit: "contain",
+                  display: "block",
+                  padding: "24px 60px",
+                }}
+              />
+            ) : (
+              <div style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 12,
+                height: 340,
+                color: "#bbb",
+                fontStyle: "italic",
+                fontSize: 14,
+              }}>
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ccc" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="2" />
+                  <circle cx="8.5" cy="8.5" r="1.5" />
+                  <polyline points="21 15 16 10 5 21" />
+                </svg>
+                <span>Add your project image</span>
+              </div>
+            )}
+
+            {/* Next */}
+            <button className="carousel-nav-btn" style={{ right: 12 }} onClick={() => goProj(proj + 1)} aria-label="Next project">
+              →
+            </button>
+          </div>
+
+          {/* Footer: info + indicators */}
+          <div className="carousel-footer" style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-end",
+            marginTop: 18,
+            gap: 16,
+          }}>
+            {/* Project info */}
+            <div style={{ flex: 1 }}>
+              <p style={{ fontSize: 18, fontWeight: 500, marginBottom: 5 }}>{currentProj.title}</p>
+              <p style={{ fontSize: 14, color: "#555", fontStyle: "italic", lineHeight: 1.65 }}>{currentProj.desc}</p>
+              <p style={{ fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase", color: "#aaa", marginTop: 8 }}>
+                {currentProj.tech}
+              </p>
+            </div>
+
+            {/* Dot indicators + counter */}
+            <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0, paddingBottom: 4 }}>
+              {PROJECTS.map((_, i) => (
+                <button
+                  key={i}
+                  className={`dot-btn${i === proj ? " dot-active" : ""}`}
+                  onClick={() => setProj(i)}
+                  aria-label={`Go to project ${i + 1}`}
+                />
+              ))}
+              <span style={{ fontSize: 12, color: "#aaa", letterSpacing: "0.08em", marginLeft: 6 }}>
+                {proj + 1} / {PROJECTS.length}
+              </span>
+            </div>
           </div>
         </section>
 
