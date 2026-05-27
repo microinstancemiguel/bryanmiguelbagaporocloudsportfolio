@@ -461,7 +461,7 @@ export default function Portfolio() {
               >
                 <span>Manila, Philippines</span>
                 <span style={{ color: "#bbb" }}>·</span>
-                <span>BSIT Student</span>
+                <span>Information Technology</span>
                 <span style={{ color: "#bbb" }}>·</span>
                 <span>Cybersecurity</span>
                 <span style={{ color: "#bbb" }}>·</span>
