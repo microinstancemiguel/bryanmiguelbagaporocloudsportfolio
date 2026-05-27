@@ -53,7 +53,7 @@ const PROJECTS = [
   {
     title: "LinkNayan: Gym Management System w/ Air Quality Monitoring & IoT Device",
     desc: "A capstone project designed for local gym communities.(open for enhancement)",
-    tech: "ESP32 · Sensors · Circuits · C++ · Node.js · Groq API · Chart.js · MSSQL · TailwindCSS",
+    tech: "ESP32 · Sensors · Circuits · C++ · Node.js · Groq API · Chart.js · MSSQL",
     icon: LinkNayan48,
     imgs: [],
   },
