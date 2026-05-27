@@ -504,7 +504,7 @@ export default function Portfolio() {
               </div>
               <div style={{ textAlign: "right", fontSize: 13, color: "#555", whiteSpace: "nowrap" }}>
                 <p>Manila, PH</p>
-                <p style={{ color: "#888", marginTop: 3 }}>1st Year - 4th Year · 2022–2027</p>
+                <p style={{ color: "#888", marginTop: 3 }}>1st Year - 4th Year · 2022 – 2027</p>
               </div>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: 8, alignItems: "baseline", marginTop: 16 }}>
@@ -517,7 +517,7 @@ export default function Portfolio() {
               </div>
               <div style={{ textAlign: "right", fontSize: 13, color: "#555", whiteSpace: "nowrap" }}>
                 <p>Manila, PH</p>
-                <p style={{ color: "#888", marginTop: 3 }}>Grade 11–12 · 2020–2022</p>
+                <p style={{ color: "#888", marginTop: 3 }}>Grade 11 – 12 · 2020 – 2022</p>
               </div>
             </div>
           </div>
@@ -532,8 +532,6 @@ export default function Portfolio() {
               BSIT student at Adamson University specializing in network infrastructure and data security.
               Pursuing a career in cloud engineering and architecture with hands-on experience across AWS,
               full-stack web development, and cybersecurity. Certified in cybersecurity (CC) by ISC2.
-
-              VALORANT GOD (Duelist), Counter-Strike (Entry Fragger), League of Legends (Thrower) &amp; Comic Nerd.
             </p>
           </div>
         </section>
