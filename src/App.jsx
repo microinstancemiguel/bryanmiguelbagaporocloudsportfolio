@@ -57,13 +57,6 @@ const PROJECTS = [
     icon: Linknayan48,
     imgs: [],
   },
-  {
-    title: "-----",
-    desc: "-----",
-    tech: "-----",
-    icon: null,
-    imgs: [],
-  },
 ];
 
 const NAV = ["About", "Projects", "Certificates", "Stack", "Contact"];
@@ -461,7 +454,7 @@ export default function Portfolio() {
               >
                 <span>Manila, Philippines</span>
                 <span style={{ color: "#bbb" }}>·</span>
-                <span>Information Technology</span>
+                <span>Tech</span>
                 <span style={{ color: "#bbb" }}>·</span>
                 <span>Cybersecurity</span>
                 <span style={{ color: "#bbb" }}>·</span>
