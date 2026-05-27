@@ -10,17 +10,17 @@ emailjs.init("vNfhSk7yAHwtaMihM");
 
 const SKILLS = {
   Frontend: [
-    { name: "JavaScript", tag: "ES2024" },
-    { name: "TypeScript", tag: "v5" },
-    { name: "React", tag: "v18" },
-    { name: "Tailwind CSS", tag: "v3" },
+    { name: "JavaScript" },
+    { name: "TypeScript" },
+    { name: "React" },
+    { name: "Tailwind CSS" },
   ],
   Backend: [
-    { name: "Node.js", tag: "LTS" },
-    { name: "Python", tag: "3g.12" },
-    { name: "PHP", tag: "8.3" },
-    { name: "MySQL", tag: "8.0" },
-    { name: "MSSQL", tag: "2022" },
+    { name: "Node.js" },
+    { name: "Python" },
+    { name: "PHP" },
+    { name: "MySQL" },
+    { name: "MSSQL" },
   ],
   Cloud: [
     { name: "AWS", tag: "Multi-Region" },
