@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import emailjs from "@emailjs/browser";
 import photo from "./AIGoatman.jpg";
-import icon48 from "./icon48.png"; // your extension icon
+import icon48 from "./icon48.png";
+import LinkNayan48 from "./LinkNayan48.png";
 import rAItify1 from "./rAI1.png";
 import rAItify2 from "./rAI2.png";
 import rAItify3 from "./rAI3.png";
@@ -50,10 +51,10 @@ const PROJECTS = [
     imgs: [rAItify1, rAItify2, rAItify3],
   },
   {
-    title: "-----",
-    desc: "-----",
-    tech: "-----",
-    icon: null,
+    title: "LinkNayan: Gym Management System w/ Air Quality Monitoring & IoT Device",
+    desc: "A capstone project designed for local gym communities.(open for enhancement)",
+    tech: "ESP32 · Sensors · Circuits · C++ · Node.js · Groq API · Chart.js · MSSQL · TailwindCSS",
+    icon: LinkNayan48,
     imgs: [],
   },
   {
